@@ -66,9 +66,9 @@
 
 - (void)registerCallback:(CDVInvokedUrlCommand*)command {
     self.callbackId = command.callbackId;
+    [self updateConnectionStatus];
     [[Captuvo sharedCaptuvoDevice] startDecoderHardware];
 }
-
 - (void)disable:(CDVInvokedUrlCommand*)command {
     self.callbackId = nil;
     [[Captuvo sharedCaptuvoDevice] stopDecoderHardware];
@@ -88,5 +88,25 @@
     [alert show];
 }
 
-@end
+//************************************************************************
+//  Connection Status Related Functionality
+//************************************************************************
+/**
+ *  Sends message to the JS side of the Cordova plugin to update device connection status.
+ */
+- (void) updateConnectionStatus
+{
+    NSString* status = [[[Captuvo sharedCaptuvoDevice] getCaptuvoName] isEqual: @"Not Available"] ? @"DISCONNECTED" : @"CONNECTED";
 
+    NSString* message = [NSString stringWithFormat:  @"{\"status\": \"%@\"}", status];
+
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK
+                                                      messageAsString: message];
+
+    [pluginResult setKeepCallbackAsBool: YES];
+
+    [self.commandDelegate sendPluginResult: pluginResult
+                                callbackId: self.callbackId];
+}
+
+@end
