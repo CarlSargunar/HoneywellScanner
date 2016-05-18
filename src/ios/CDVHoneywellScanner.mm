@@ -66,8 +66,8 @@
 
 - (void)registerCallback:(CDVInvokedUrlCommand*)command {
     self.callbackId = command.callbackId;
-    [self updateConnectionStatus];
     [[Captuvo sharedCaptuvoDevice] startDecoderHardware];
+    [self updateConnectionStatus];
 }
 - (void)disable:(CDVInvokedUrlCommand*)command {
     self.callbackId = nil;
