@@ -25,7 +25,11 @@ HoneywellScanner.prototype.enable = function(successCallback, errorCallback, onS
           }
       }
       else if (data.data) {
-        onScan(data.data);
+        if (noOnScan) {
+          onScan(data);
+        } else {
+          onScan(data.data);
+        }
       }
     }
 
